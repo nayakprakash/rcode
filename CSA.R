@@ -17,7 +17,18 @@ with(csatest1,mean(Age.at.Surgery.[agesplitat35=="old"]))
 subset(csatest1,agesplitat35=="young")->csayoung
 subset(csatest1,agesplitat35=="old")->csaold
 csatest1$agesplitat35<-as.factor(csatest1$agesplitat35)#since young and old were characters
-str (csayoung)
-csa<- csatest1[,1:52]
-str(csa)
 write.table(csa,file="C:/Users/nayakp/research/Rspace/csa.csv",row.names=F)#saves output to a txt or csv file but doesn't render well with View function later
+csa<-csatest[,1:52]
+csa<-csa[,-(1:4)]
+library (tidyr)
+install.packages("lubridate")
+library(lubridate)
+csa$Date.of.Birth<-dmy(csa$Date.of.Birth)
+csa$Biopsy.Date<-dmy(csa$Biopsy.Date)
+csa$Surgery.Date<-dmy(csa$Surgery.Date)
+colnames(csa)->col.names
+csadate<-csa[,c(grepl("Date.",x= col.names)==TRUE)]
+str(csadate)
+dmy(csa$c(grepl("Date.",x= col.names)==TRUE))
+csaposix<-lapply(with(csa,csa[,c(grepl("Date.",x= col.names)==TRUE)]),dmy)
+str(csaposix)

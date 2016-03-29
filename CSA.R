@@ -29,3 +29,37 @@ csa<-csa[,-5]
 csa$Grade.<-as.factor(csa$Grade.)
 names(csa)<-c("dob","age_surgery","sex","diagnosis","site","anatomy","presenting_status","date_biopsy","prior_surgery","type_surgery","date_surgery","type_closure","radiation","chemotherapy","size","grade","margin","necrosis","complications","surgery_complications","date_surgery_complications","relapse1_type","relapse1_date","relapse1_type_surgery","relapse1_date_surgery","relapse1_radiation","relapse1_chemotherapy","relapse2_type","relapse2_date","relapse2_type_surgery","relapse2_date_surgery","relapse2_radiation","relapse2_chemotherapy","relapse3_type","relapse3_date","relapse3_type_surgery","relapse3_date_surgery","relapse3_radiation","relapse3_chemotherapy","status","date_status","dfs_months","os_months","comments")
 write.csv(csa,file="csvposix.csv",row.names=F)
+csatest<-read.csv("C:/Users/nayakp/research/Rspace/csvposix.csv",header = T, sep = ",",stringsAsFactors = T)
+map_fn<-function(diag) {
+if (grepl("mesenchymal",diag))
+    "primary_mesenchymal"
+else if (grepl("dedifferentiated",diag))
+    "dediff"
+else if (grepl("clear cell",diag) )
+    "primary_clearcell"
+else if (grepl("osteochondromatosis",diag) | grepl( "osteochondroma",diag) | grepl("enchondroma",diag) | grepl("chondroblastoma",diag)| grepl("enchondromas",diag)|grepl("osteochondromas",diag))
+    "secondary"
+else "primary_conventional"
+}
+csatest$type_chondrosarcoma<-sapply(csatest$diagnosis,map_fn)
+csatest$type_chondrosarcoma<-as.factor(csatest$type_chondrosarcoma)
+summary(csatest$type_chondrosarcoma)
+map_region <- function(extreme){
+    if (grepl("pelvis",extreme) | grepl ("spine",extreme)|grepl("Pelvis",extreme)| grepl ("Sacrum",extreme))
+        "central"
+    else if  (grepl("Calcaneus",extreme)|grepl("Cuneiform",extreme)|grepl("Metacarpal",extreme)|grepl("Metatarsal",extreme)|grepl("Phalanx",extreme))
+        "Hand_Foot"
+    else if (grepl("Clavicle",extreme)|grepl("Scapula",extreme))
+        "flat_bone"
+    else "Long_Bone"
+ }
+csatest$body_region <- sapply (csatest$anatomy, map_region)
+csatest$body_region<-as.factor(csatest$body_region)
+install.packages ("cmprsk")
+library (cmprsk)
+install.packages("survival")
+library (survival)
+install.packages ("survcomp")
+library (survcomp)
+str(csatest)
+write.csv(csatest,file="csvposix.csv",row.names=F)

@@ -8,17 +8,22 @@ library (tidyr)
 library (ggplot2)
 library (ggvis)
 library (lubridate)
-
+install.packages ("cmprsk")
+library (cmprsk)
+install.packages("survival")
+library (survival)
+install.packages ("survcomp")
+library (survcomp)
 csatest<-read.csv("C:/Users/nayakp//research/Rspace/CSA.csv",header = T, sep = ",",stringsAsFactors = F)#this read.csv works well
 # / slash is used for R code, \ this one for windows native address
-which(csatest1$Age.at.Surgery.<=35)
-ifelse(csatest1$Age.at.Surgery.<=35,"young","old")->csatest1$agesplitat35#I was super happy at being able to parse the data by age and add a young/old column in one elegant step!
-with(csatest1,mean(Age.at.Surgery.[agesplitat35=="young"]))
-with(csatest1,mean(Age.at.Surgery.[agesplitat35=="old"]))
-subset(csatest1,agesplitat35=="young")->csayoung
-subset(csatest1,agesplitat35=="old")->csaold
-csatest1$agesplitat35<-as.factor(csatest1$agesplitat35)#since young and old were characters
-write.table(csa,file="C:/Users/nayakp/research/Rspace/csa.csv",row.names=F)#saves output to a txt or csv file but doesn't render well with View function later
+# which(csatest1$Age.at.Surgery.<=35)
+# ifelse(csatest1$Age.at.Surgery.<=35,"young","old")->csatest1$agesplitat35#I was super happy at being able to parse the data by age and add a young/old column in one elegant step!
+#with(csatest1,mean(Age.at.Surgery.[agesplitat35=="young"]))
+#with(csatest1,mean(Age.at.Surgery.[agesplitat35=="old"]))
+#subset(csatest1,agesplitat35=="young")->csayoung
+#subset(csatest1,agesplitat35=="old")->csaold
+#csatest1$agesplitat35<-as.factor(csatest1$agesplitat35)#since young and old were characters
+#write.table(csa,file="C:/Users/nayakp/research/Rspace/csa.csv",row.names=F)#saves output to a txt or csv file but doesn't render well with View function later
 
 csa<-csatest[,7:52]#remove unwanted columns
 
@@ -27,9 +32,14 @@ csa[,grep("Date",names(csa))]<-lapply(csa[,grep("Date",names(csa))],dmy)
 csa<-csa[,-9]
 csa<-csa[,-5]
 csa$Grade.<-as.factor(csa$Grade.)
+
+# add new column names without fullstops spaces and all the non sense
 names(csa)<-c("dob","age_surgery","sex","diagnosis","site","anatomy","presenting_status","date_biopsy","prior_surgery","type_surgery","date_surgery","type_closure","radiation","chemotherapy","size","grade","margin","necrosis","complications","surgery_complications","date_surgery_complications","relapse1_type","relapse1_date","relapse1_type_surgery","relapse1_date_surgery","relapse1_radiation","relapse1_chemotherapy","relapse2_type","relapse2_date","relapse2_type_surgery","relapse2_date_surgery","relapse2_radiation","relapse2_chemotherapy","relapse3_type","relapse3_date","relapse3_type_surgery","relapse3_date_surgery","relapse3_radiation","relapse3_chemotherapy","status","date_status","dfs_months","os_months","comments")
+
 write.csv(csa,file="csvposix.csv",row.names=F)
 csatest<-read.csv("C:/Users/nayakp/research/Rspace/csvposix.csv",header = T, sep = ",",stringsAsFactors = T)
+
+# function for chondrosarcoma types
 map_fn<-function(diag) {
 if (grepl("mesenchymal",diag))
     "primary_mesenchymal"
@@ -44,6 +54,8 @@ else "primary_conventional"
 csatest$type_chondrosarcoma<-sapply(csatest$diagnosis,map_fn)
 csatest$type_chondrosarcoma<-as.factor(csatest$type_chondrosarcoma)
 summary(csatest$type_chondrosarcoma)
+
+# function for body region
 map_region <- function(extreme){
     if (grepl("pelvis",extreme) | grepl ("spine",extreme)|grepl("Pelvis",extreme)| grepl ("Sacrum",extreme))
         "central"
@@ -55,11 +67,25 @@ map_region <- function(extreme){
  }
 csatest$body_region <- sapply (csatest$anatomy, map_region)
 csatest$body_region<-as.factor(csatest$body_region)
-install.packages ("cmprsk")
-library (cmprsk)
-install.packages("survival")
-library (survival)
-install.packages ("survcomp")
-library (survcomp)
+
 str(csatest)
+write.csv(csatest,file="csvposix.csv",row.names=F)
+
+# grade by 3 tiers
+
+tiergrade <- csatest$grade
+tiergrade <- as.character(tiergrade)
+tiergrade <- gsub(1.0,"low",tiergrade)
+tiergrade <-gsub(0.5,"low",tiergrade)
+tiergrade <-gsub(2.0,"high",tiergrade)
+tiergrade <-gsub(3.0,"dediff",tiergrade)
+tiergrade <- gsub("highdediff","high",tiergrade)
+tiergrade <- gsub("high4","high",tiergrade)
+
+# substituting the NA values took some time. remember the trick to turn them into -1 and then substitute if nothing else works
+
+tiergrade[is.na(as.character(tiergrade))]<- "high"
+tiergrade <- as.factor(tiergrade)
+levels(tiergrade)
+csatest$tiergrade <- tiergrade
 write.csv(csatest,file="csvposix.csv",row.names=F)

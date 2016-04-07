@@ -89,3 +89,107 @@ tiergrade <- as.factor(tiergrade)
 levels(tiergrade)
 csatest$tiergrade <- tiergrade
 write.csv(csatest,file="csvposix.csv",row.names=F)
+
+# margin by 4 tiers
+
+csatest<-read.csv("C:/Users/nayakp/research/Rspace/csvposix.csv",header = T, sep = ",",stringsAsFactors = T)
+csatest$margin <- as.character(csatest$margin)
+map_margintype <- function (margin){
+    if (grepl ("Gross",margin))
+        "gross_positive"
+    else if (grepl("Micro",margin))
+        "micro_positive"
+    else if (grepl ("Negative",margin)& (grepl("1mm",margin)|grepl("very close",margin)|grepl("revised",margin)))
+        "close_negative"
+    else if (grepl ("Negative",margin)| (grepl ("Negative",margin)& (grepl("cm",margin)|grepl("4mm",margin)|grepl("enchondroma @ margin",margin))))
+        "negative"
+    else "NA"
+}
+csatest$margintype <- sapply(csatest$margin,map_margintype)
+csatest$margin <- as.factor(csatest$margin)
+csatest$margintype <- as.factor(csatest$margintype)
+levels(csatest$margintype)
+write.csv(csatest,file="csvposix.csv",row.names=F)
+# radiation yes or no
+csatest$radiation <- as.character(csatest$radiation)
+map_rtstatus<-function (rtstatus){
+    if (grepl("No- remote- for Wilms tumor",rtstatus)|grepl("Remote preop",rtstatus) )
+    "remote"
+ else if (grepl( "PostOp",rtstatus)| grepl("PreOp",rtstatus))
+    "yes"
+ else
+    "no"
+}
+csatest$radiation_status<- sapply(csatest$radiation,map_rtstatus)
+csatest$radiation_status<- as.factor(csatest$radiation_status)
+csatest$radiation <- as.factor(csatest$radiation)
+levels(csatest$radiation_status)
+
+# at presentation path frac, LR, Met yes or no
+csatest$presenting_status <- as.character(csatest$presenting_status)
+map_pathfrac <- function (frac) {
+    if (grepl ("path",frac))
+        "yes"
+    else
+        "no"}
+csatest$pathfrac_presentation<- sapply (csatest$presenting_status,map_pathfrac)
+
+map_metstatus <- function (metstatus) {
+    if (grepl ("M1",metstatus))
+        "yes"
+    else
+        "no"
+}
+csatest$met_presentation <- sapply (csatest$presenting_status,map_metstatus)
+
+map_lrstatus <- function (lrstatus){
+    if (grepl ("LR",lrstatus))
+        "yes"
+    else
+        "no"
+}
+csatest$lr_presentation <- sapply (csatest$presenting_status,map_lrstatus)
+
+csatest$pathfrac_presentation <- as.factor(csatest$pathfrac_presentation)
+csatest$met_presentation <- as.factor(csatest$met_presentation)
+csatest$lr_presentation <- as.factor(csatest$lr_presentation)
+)
+
+# LR and Met yes or no
+map_lr <- function (lr){
+    if (grepl ("LR",lr))
+        "yes"
+    else
+        "no"
+}
+
+csatest$lr <- sapply (csatest$relapse1_type,map_lr)
+csatest$lr <- as.factor(csatest$lr)
+
+map_met <- function (met){
+    if (grepl ("Systemic",met)|grepl("systemic",met))
+        "yes"
+    else
+        "no"
+}
+csatest$met <- sapply (csatest$relapse1_type,map_met)
+csatest$met <- as.factor(csatest$met)
+# for lr2 and met2
+map_lr <- function (lr){
+    if (grepl ("LR",lr))
+        "yes"
+    else
+        "no"
+}
+
+csatest$lr2 <- sapply (csatest$relapse2_type,map_lr)
+csatest$lr2 <- as.factor(csatest$lr2)
+
+map_met <- function (met){
+    if (grepl ("Systemic",met)|grepl("systemic",met))
+        "yes"
+    else
+        "no"
+}
+csatest$met2 <- sapply (csatest$relapse2_type,map_met)
+csatest$met2 <- as.factor(csatest$met2)

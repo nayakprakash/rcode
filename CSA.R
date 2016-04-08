@@ -193,3 +193,18 @@ map_met <- function (met){
 }
 csatest$met2 <- sapply (csatest$relapse2_type,map_met)
 csatest$met2 <- as.factor(csatest$met2)
+csatest$met3 <- sapply (csatest$relapse3_type,map_met)
+csatest$met3 <- as.factor(csatest$met3)
+csatest$lr3 <- sapply (csatest$relapse3_type,map_lr)
+csatest$lr3 <- as.factor(csatest$lr3)
+
+
+if (csatest$lr=="yes"){
+    csatest$lrfs <- csatest$relapse1_date - csatest$date_surgery
+}else if(csatest$lr2=="yes") {
+    csatest$lrfs <- csatest$relapse2_date - csatest$date_surgery
+}else if(csatest$lr3=="yes") {
+    csatest$lrfs <- csatest$relapse3_date - csatest$date_surgery
+}else
+    csatest$lrfs <- csatest$date_status - csatest$date_surgery
+sapply(csatest$(grep("date",colnames(csatest))|grep("dob",colnames(csatest))),as.POSIXct)

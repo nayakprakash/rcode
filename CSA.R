@@ -37,6 +37,7 @@ csa$Grade.<-as.factor(csa$Grade.)
 names(csa)<-c("dob","age_surgery","sex","diagnosis","site","anatomy","presenting_status","date_biopsy","prior_surgery","type_surgery","date_surgery","type_closure","radiation","chemotherapy","size","grade","margin","necrosis","complications","surgery_complications","date_surgery_complications","relapse1_type","relapse1_date","relapse1_type_surgery","relapse1_date_surgery","relapse1_radiation","relapse1_chemotherapy","relapse2_type","relapse2_date","relapse2_type_surgery","relapse2_date_surgery","relapse2_radiation","relapse2_chemotherapy","relapse3_type","relapse3_date","relapse3_type_surgery","relapse3_date_surgery","relapse3_radiation","relapse3_chemotherapy","status","date_status","dfs_months","os_months","comments")
 
 write.csv(csa,file="csvposix.csv",row.names=F)
+
 csatest<-read.csv("C:/Users/nayakp/research/Rspace/csvposix.csv",header = T, sep = ",",stringsAsFactors = T)
 
 # function for chondrosarcoma types
@@ -198,13 +199,30 @@ csatest$met3 <- as.factor(csatest$met3)
 csatest$lr3 <- sapply (csatest$relapse3_type,map_lr)
 csatest$lr3 <- as.factor(csatest$lr3)
 
+# converting all colnames with "date" to POSIXct
 
-if (csatest$lr=="yes"){
-    csatest$lrfs <- csatest$relapse1_date - csatest$date_surgery
-}else if(csatest$lr2=="yes") {
-    csatest$lrfs <- csatest$relapse2_date - csatest$date_surgery
-}else if(csatest$lr3=="yes") {
-    csatest$lrfs <- csatest$relapse3_date - csatest$date_surgery
+obj <- csatest[,c(grep("date",colnames(csatest)))]
+obj <- lapply(obj, as.character)
+obj <- lapply(obj, as.POSIXct)
+csatest[,c(grep("date",colnames(csatest)))] <- obj
+str(csatest[,c(grep("date",colnames(csatest)))])
+
+
+# calculating LRFS
+for (i in nrow (csatest)){
+if (csatest$lr[i]=="yes"){
+    csatest$lrfs[i] <- csatest$relapse1_date[i] - csatest$date_surgery[i]
+}else if(csatest$lr2[i]=="yes") {
+    csatest$lrfs[i] <- csatest$relapse2_date[i] - csatest$date_surgery[i]
+}else if(csatest$lr3[i]=="yes") {
+    csatest$lrfs[i] <- csatest$relapse3_date[i] - csatest$date_surgery[i]
 }else
-    csatest$lrfs <- csatest$date_status - csatest$date_surgery
-sapply(csatest$(grep("date",colnames(csatest))|grep("dob",colnames(csatest))),as.POSIXct)
+    csatest$lrfs[i] <- csatest$date_status[i] - csatest$date_surgery[i]
+}
+str(csatest$lrfs)
+head(csatest$lrfs)
+csadates <- csatest[,c("lr","lr2","lr3","met","met","met2","met3","status","date_status","dfs_months","os_months","date_surgery","relapse1_date","relapse2_date","relapse3_date")]
+
+write.csv(csadates,file="csadates.csv",row.names=F)
+
+

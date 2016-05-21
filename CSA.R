@@ -14,7 +14,7 @@ install.packages("survival")
 library (survival)
 install.packages ("survcomp")
 library (survcomp)
-csatest<-read.csv("C:/Users/nayakp//research/Rspace/CSA.csv",header = T, sep = ",",stringsAsFactors = F)#this read.csv works well
+csatest<-read.csv("C:/Users/nayakp/research/Rspace/CSAmain.csv",header = T, sep = ",",stringsAsFactors = F)#this read.csv works well
 # / slash is used for R code, \ this one for windows native address
 # which(csatest1$Age.at.Surgery.<=35)
 # ifelse(csatest1$Age.at.Surgery.<=35,"young","old")->csatest1$agesplitat35#I was super happy at being able to parse the data by age and add a young/old column in one elegant step!
@@ -38,7 +38,7 @@ names(csa)<-c("dob","age_surgery","sex","diagnosis","site","anatomy","presenting
 
 write.csv(csa,file="csvposix.csv",row.names=F)
 
-csatest<-read.csv("C:/Users/nayakp/research/Rspace/csvposix.csv",header = T, sep = ",",stringsAsFactors = T)
+csatest<-read.csv("C:/Users/nayakp/research/Rspace/csvposix.csv",header = T, sep = ",",stringsAsFactors = F)
 
 # function for chondrosarcoma types
 map_fn<-function(diag) {
@@ -199,6 +199,8 @@ csatest$met3 <- as.factor(csatest$met3)
 csatest$lr3 <- sapply (csatest$relapse3_type,map_lr)
 csatest$lr3 <- as.factor(csatest$lr3)
 
+csatest<-read.csv("C:/Users/nayakp/research/Rspace/csvposix.csv",header = T, sep = ",",stringsAsFactors= F)
+str(csatest)
 # converting all colnames with "date" to POSIXct
 
 obj <- csatest[,c(grep("date",colnames(csatest)))]
@@ -206,10 +208,19 @@ obj <- lapply(obj, as.character)
 obj <- lapply(obj, as.POSIXct)
 csatest[,c(grep("date",colnames(csatest)))] <- obj
 str(csatest[,c(grep("date",colnames(csatest)))])
-
+csatest$dob <- as.POSIXct (csatest$dob)
+#for (i in nrow (csatest)){
+#csatest$age_sx[i] <- csatest$date_surgery[i] - csatest$dob[i]
+}#
+csatest$age_sx <- csatest$date_surgery - csatest$dob
+head(csatest$age_sx)
+str(csatest$age_sx)
 
 # calculating LRFS
-for (i in nrow (csatest)){
+# the 2 lines below did not work because as. character coerced it to 1,2 due to leaky abstraction problems as desxcribed by John Mount in r-bloggers as why factors are not first class citizens
+# str(csatest)
+# csatest[,c("lr","lr2","lr3")] <- as.character(csatest[,c("lr","lr2","lr3")])
+for (i in 1:nrow (csatest)){
 if (csatest$lr[i]=="yes"){
     csatest$lrfs[i] <- csatest$relapse1_date[i] - csatest$date_surgery[i]
 }else if(csatest$lr2[i]=="yes") {
@@ -219,10 +230,24 @@ if (csatest$lr[i]=="yes"){
 }else
     csatest$lrfs[i] <- csatest$date_status[i] - csatest$date_surgery[i]
 }
+str(csatest)
 str(csatest$lrfs)
 head(csatest$lrfs)
-csadates <- csatest[,c("lr","lr2","lr3","met","met","met2","met3","status","date_status","dfs_months","os_months","date_surgery","relapse1_date","relapse2_date","relapse3_date")]
+write.csv(csatest,file="csvposix.csv",row.names=F)
+csatest<-read.csv("C:/Users/nayakp/research/Rspace/csvposix.csv",header = T, sep = ",",stringsAsFactors=F)
+
+
+# creating csadates
+csadates <- csatest[,c("dob","age_sx","age_surgery","date_surgery","relapse1_date","relapse2_date","relapse3_date","date_status","lr","lr2","lr3","met","met2","met3","status","dfs_months","os_months","lrfs")]
 
 write.csv(csadates,file="csadates.csv",row.names=F)
 
-
+# file for anthony update
+csaupdate <- csatest[,1:7]
+str(csaupdate)
+csaanthony <- cbind(csadates,csaupdate)
+str(csaanthony)
+write.csv(csaanthony,file="csaanthony.csv",row.names=F)
+str(csatest)
+str(csadates)
+csatest <- csatest[,!(colnames(csatest)%in% c("lrfs"))]

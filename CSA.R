@@ -216,6 +216,11 @@ csatest$age_sx <- csatest$date_surgery - csatest$dob
 head(csatest$age_sx)
 str(csatest$age_sx)
 
+# as.Date for date calculations,this is the best and easiest when time zones are not involved. Remember that the date columns are in chr mode and that '%d-%m-%Y' format is specified.Look at the str to know how the chr dates are being read, same file was read differently at home and at the lab.Wierd, haven't found out why yet.
+csatest[,c(grep("date",colnames(csatest)))] <- lapply(csatest[,c(grep("date",colnames(csatest)))],as.Date,format='%Y-%m-%d')
+csatest$dob <- as.Date (csatest$dob,format='%Y-%m-%d')
+
+
 # calculating LRFS
 # the 2 lines below did not work because as. character coerced it to 1,2 due to leaky abstraction problems as desxcribed by John Mount in r-bloggers as why factors are not first class citizens
 # str(csatest)
@@ -236,6 +241,25 @@ head(csatest$lrfs)
 write.csv(csatest,file="csvposix.csv",row.names=F)
 csatest<-read.csv("C:/Users/nayakp/research/Rspace/csvposix.csv",header = T, sep = ",",stringsAsFactors=F)
 
+# calculating MFS
+for (i in 1:nrow (csatest)){
+    if (csatest$met_presentation[i]=="yes"){
+        csatest$mfs[i] <- csatest$date_surgery[i] - csatest$date_surgery[i]
+   } else if (csatest$met[i]=="yes"){
+    csatest$mfs[i] <- csatest$relapse1_date[i] - csatest$date_surgery[i]
+} else if(csatest$met2[i]=="yes") {
+    csatest$mfs[i] <- csatest$relapse2_date[i] - csatest$date_surgery[i]
+} else if(csatest$met3[i]=="yes") {
+    csatest$mfs[i] <- csatest$relapse3_date[i] - csatest$date_surgery[i]
+}else
+    csatest$mfs[i] <- csatest$date_status[i] - csatest$date_surgery[i]
+}
+str(csatest$mfs)
+# calculating OS
+csatest$os <- csatest$date_status - csatest$date_surgery
+str(csatest$os)
+write.csv(csatest,file="csvposix.csv",row.names=F)
+
 
 # creating csadates
 csadates <- csatest[,c("dob","age_sx","age_surgery","date_surgery","relapse1_date","relapse2_date","relapse3_date","date_status","lr","lr2","lr3","met","met2","met3","status","dfs_months","os_months","lrfs")]
@@ -251,3 +275,25 @@ write.csv(csaanthony,file="csaanthony.csv",row.names=F)
 str(csatest)
 str(csadates)
 csatest <- csatest[,!(colnames(csatest)%in% c("lrfs"))]
+csatest<-read.csv("C:/Users/nayakp/research/Rspace/csvposix.csv",header = T, sep = ",",stringsAsFactors=F)
+
+# Analysis model
+# age in days
+summary(lm(lrfs~age_sx,data=csatest))
+lmlrfs_d<- (lm(lrfs~age_sx,data=csatest))
+lmmfs_d<- (lm(mfs~age_sx,data=csatest))
+summary(lmmfs_d)
+csatest$os <- as.numeric(csatest$os)
+lmos_d<- (lm(os~age_sx,data=csatest))
+summary(lmos_d)
+
+# age in years
+summary(lm(lrfs~age_y,data=csatest))
+lmlrfs_y<- (lm(lrfs~age_y,data=csatest))
+lmmfs_y<- (lm(mfs~age_y,data=csatest))
+summary(lmmfs_d)
+# lm model does not identify difftime objects hence as.numeric
+csatest$os <- as.numeric(csatest$os)
+lmos_y<- (lm(os~age_y,data=csatest))
+summary(lmos_y)
+

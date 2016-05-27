@@ -1,0 +1,185 @@
+* questions
+1. Does LRFS impact MFS and OS
+   1.
+   2.
+* Data points
+** Margins
+*** Gross positive
+1. # 49 1990 low grade shoulder girdle
+2. # 112 foot phalanx,high grade, initially curretted 2005 JSW
+3. # 153 pelvis high grade 1995
+4. LR at presentation and again# 191 high pelvis ramus 1995
+5. LR # 249 high pelvis ilium 2004
+6. # 258 high pelvis ilium 1994
+7. LR # 274 dediff distal femur 2003
+8. # 287 scapula dediff 2001
+*** Micro-positive
+1. LR## 4 LR, # 54,pathfrac and LR high,#132 LR at presentation.# 152
+   Rads and LR at presentation.# 194 Low, LR at presentation.# 239
+   high, pathfrac,LR and Met#244 dediff pathfrac,LR, Met.#281 LR at
+   presentation,met,#302 high
+2. Low Grade# 45,57,58,104,141,163,164,172,196,254
+3. Rads #135,138 remote rads,149.206,223
+4. Met at presentation #238 dediff # 265,268 high,277,282 high,293 met
+   presentation,met.#309 rads,multiple mets
+* names(csatest)
+ [1] "dob"                        "age_surgery"
+ [3] "sex"                        "diagnosis"
+ [5] "site"                       "anatomy"
+ [7] "presenting_status"          "date_biopsy"
+ [9] "prior_surgery"              "type_surgery"
+[11] "date_surgery"               "type_closure"
+[13] "radiation"                  "chemotherapy"
+[15] "size"                       "grade"
+[17] "margin"                     "necrosis"
+[19] "complications"              "surgery_complications"
+[21] "date_surgery_complications" "relapse1_type"
+[23] "relapse1_date"              "relapse1_type_surgery"
+[25] "relapse1_date_surgery"      "relapse1_radiation"
+[27] "relapse1_chemotherapy"      "relapse2_type"
+[29] "relapse2_date"              "relapse2_type_surgery"
+[31] "relapse2_date_surgery"      "relapse2_radiation"
+[33] "relapse2_chemotherapy"      "relapse3_type"
+[35] "relapse3_date"              "relapse3_type_surgery"
+[37] "relapse3_date_surgery"      "relapse3_radiation"
+[39] "relapse3_chemotherapy"      "status"
+[41] "date_status"                "dfs_months"
+[43] "os_months"                  "comments"
+[45] "type_chondrosarcoma"        "body_region"
+[47] "tiergrade"                  "margintype"
+[49] "radiation_status"           "pathfrac_presentation"
+[51] "met_presentation"           "lr_presentation"
+[53] "lr"                         "met"
+[55] "lr2"                        "met2"
+[57] "met3"                       "lr3"
+[59] "age_sx"                     "lrfs"
+[61] "mfs"                        "os"
+[63] "age_y"
+* Time in years Univariate LM
+** LRFS
+*** summary (lm(lrfs_y~age_y,data=csatest))
+
+Call:
+lm(formula = lrfs_y ~ age_y, data = csatest)
+
+Residuals:
+    Min      1Q  Median      3Q     Max
+-9.0334 -4.5846 -0.2407  3.1526 17.8609
+
+Coefficients:
+            Estimate Std. Error t value Pr(>|t|)
+(Intercept) 11.06516    0.91852  12.047  < 2e-16 ***
+age_y       -0.06508    0.01846  -3.526 0.000487 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 5.59 on 308 degrees of freedom
+  (2 observations deleted due to missingness)
+Multiple R-squared:  0.03879,	Adjusted R-squared:  0.03567
+F-statistic: 12.43 on 1 and 308 DF,  p-value: 0.0004868
+*** summary (lm(lrfs_y~factor(pathfrac_presentation),data=csatest))
+
+Call:
+lm(formula = lrfs_y ~ factor(pathfrac_presentation), data = csatest)
+
+Residuals:
+    Min      1Q  Median      3Q     Max
+-8.3192 -4.2356 -0.3904  3.1137 18.4561
+
+Coefficients:
+                                 Estimate Std. Error t value Pr(>|t|)
+(Intercept)                        8.3658     0.3276  25.535  < 2e-16 ***
+factor(pathfrac_presentation)yes  -4.8831     1.2047  -4.053  6.4e-05 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 5.56 on 309 degrees of freedom
+  (1 observation deleted due to missingness)
+Multiple R-squared:  0.05048,	Adjusted R-squared:  0.04741
+F-statistic: 16.43 on 1 and 309 DF,  p-value: 6.397e-05
+***
+
+** MFS
+*** summary (lm(mfs_y~age_y,data=csatest))
+
+Call:
+lm(formula = mfs_y ~ age_y, data = csatest)
+
+Residuals:
+    Min      1Q  Median      3Q     Max
+-8.8980 -4.8272 -0.1905  3.4018 18.1669
+
+Coefficients:
+            Estimate Std. Error t value Pr(>|t|)
+(Intercept) 10.53964    0.93518  11.270  < 2e-16 ***
+age_y       -0.05829    0.01878  -3.103  0.00209 **
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 5.694 on 307 degrees of freedom
+  (3 observations deleted due to missingness)
+Multiple R-squared:  0.03041,	Adjusted R-squared:  0.02726
+F-statistic:  9.63 on 1 and 307 DF,  p-value: 0.002092
+*** summary (lm(mfs_y~factor(pathfrac_presentation),data=csatest))
+
+Call:
+lm(formula = mfs_y ~ factor(pathfrac_presentation), data = csatest)
+
+Residuals:
+   Min     1Q Median     3Q    Max
+-8.127 -4.817 -0.141  3.304 18.695
+
+Coefficients:
+                                 Estimate Std. Error t value Pr(>|t|)
+(Intercept)                        8.1273     0.3335   24.37  < 2e-16 ***
+factor(pathfrac_presentation)yes  -4.6690     1.2517   -3.73 0.000228 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 5.659 on 308 degrees of freedom
+  (2 observations deleted due to missingness)
+Multiple R-squared:  0.04322,	Adjusted R-squared:  0.04011
+F-statistic: 13.91 on 1 and 308 DF,  p-value: 0.0002278
+***
+** OS
+*** summary(lm(os_y~age_y,data=csatest))
+
+Call:
+lm(formula = os_y ~ age_y, data = csatest)
+
+Residuals:
+    Min      1Q  Median      3Q     Max
+-9.1209 -4.6182 -0.0079  3.0415 17.6599
+
+Coefficients:
+            Estimate Std. Error t value Pr(>|t|)
+(Intercept) 10.91960    0.90543  12.060  < 2e-16 ***
+age_y       -0.05436    0.01820  -2.988  0.00304 **
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 5.511 on 308 degrees of freedom
+  (2 observations deleted due to missingness)
+Multiple R-squared:  0.02816,	Adjusted R-squared:  0.02501
+F-statistic: 8.925 on 1 and 308 DF,  p-value: 0.003038
+*** summary(lm(os_y~factor(pathfrac_presentation),data=csatest))
+
+Call:
+lm(formula = os_y ~ factor(pathfrac_presentation), data = csatest)
+
+Residuals:
+    Min      1Q  Median      3Q     Max
+-8.6216 -4.1490 -0.0435  2.9058 18.1538
+
+Coefficients:
+                                 Estimate Std. Error t value Pr(>|t|)
+(Intercept)                        8.6681     0.3233  26.812  < 2e-16 ***
+factor(pathfrac_presentation)yes  -4.1890     1.1888  -3.524  0.00049 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 5.486 on 309 degrees of freedom
+  (1 observation deleted due to missingness)
+Multiple R-squared:  0.03863,	Adjusted R-squared:  0.03552
+F-statistic: 12.42 on 1 and 309 DF,  p-value: 0.0004898
+***

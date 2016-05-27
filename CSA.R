@@ -255,45 +255,40 @@ for (i in 1:nrow (csatest)){
     csatest$mfs[i] <- csatest$date_status[i] - csatest$date_surgery[i]
 }
 str(csatest$mfs)
+
 # calculating OS
 csatest$os <- csatest$date_status - csatest$date_surgery
 str(csatest$os)
 write.csv(csatest,file="csvposix.csv",row.names=F)
 
+# converting them all from days to years
+csatest$os <- as.numeric(csatest$os)#lm model does not identify difftime after doing as.numeric for difftime objects
+csatest$os_y <- (csatest$os)/365
+csatest$mfs_y <- (csatest$mfs)/365
+csatest$lrfs_y <- (csatest$lrfs)/365
 
-# creating csadates
-csadates <- csatest[,c("dob","age_sx","age_surgery","date_surgery","relapse1_date","relapse2_date","relapse3_date","date_status","lr","lr2","lr3","met","met2","met3","status","dfs_months","os_months","lrfs")]
+# Analysis
 
-write.csv(csadates,file="csadates.csv",row.names=F)
+# lm for survival univariate with time in days
+summary (lm(lrfs~age_sx,data=csatest))
+summary (lm(mfs~age_sx,data=csatest))
+summary (lm(os~age_sx,data=csatest))
 
-# file for anthony update
-csaupdate <- csatest[,1:7]
-str(csaupdate)
-csaanthony <- cbind(csadates,csaupdate)
-str(csaanthony)
-write.csv(csaanthony,file="csaanthony.csv",row.names=F)
-str(csatest)
-str(csadates)
-csatest <- csatest[,!(colnames(csatest)%in% c("lrfs"))]
-csatest<-read.csv("C:/Users/nayakp/research/Rspace/csvposix.csv",header = T, sep = ",",stringsAsFactors=F)
+# lm for survival univariate with time in years
+## lrfs
+summary (lm(lrfs_y~age_y,data=csatest))
+summary (lm(lrfs_y~factor(pathfrac_presentation),data=csatest))
+summary (lm(lrfs_y~factor(margintype),data=csatest))
 
-# Analysis model
-# age in days
-summary(lm(lrfs~age_sx,data=csatest))
-lmlrfs_d<- (lm(lrfs~age_sx,data=csatest))
-lmmfs_d<- (lm(mfs~age_sx,data=csatest))
-summary(lmmfs_d)
-csatest$os <- as.numeric(csatest$os)
-lmos_d<- (lm(os~age_sx,data=csatest))
-summary(lmos_d)
+## mfs
+summary (lm(mfs_y~age_y,data=csatest))
+summary (lm(mfs_y~factor(pathfrac_presentation),data=csatest))
+summary (lm(mfs_y~factor(margintype),data=csatest))
 
-# age in years
-summary(lm(lrfs~age_y,data=csatest))
-lmlrfs_y<- (lm(lrfs~age_y,data=csatest))
-lmmfs_y<- (lm(mfs~age_y,data=csatest))
-summary(lmmfs_d)
-# lm model does not identify difftime objects hence as.numeric
-csatest$os <- as.numeric(csatest$os)
-lmos_y<- (lm(os~age_y,data=csatest))
-summary(lmos_y)
+## os
+summary(lm(os_y~age_y,data=csatest))
+summary(lm(os_y~factor(pathfrac_presentation),data=csatest))
+summary(lm(os_y~factor(margintype),data=csatest))
+
+
 

@@ -262,7 +262,7 @@ str(csatest$os)
 write.csv(csatest,file="csvposix.csv",row.names=F)
 
 # converting them all from days to years
-csatest$os <- as.numeric(csatest$os)#lm model does not identify difftime after doing as.numeric for difftime objects
+csatest$os <- as.numeric(csatest$os)#lm model does not identify difftime objects hence as.numeric for difftime objects
 csatest$os_y <- (csatest$os)/365
 csatest$mfs_y <- (csatest$mfs)/365
 csatest$lrfs_y <- (csatest$lrfs)/365
@@ -279,16 +279,22 @@ summary (lm(os~age_sx,data=csatest))
 summary (lm(lrfs_y~age_y,data=csatest))
 summary (lm(lrfs_y~factor(pathfrac_presentation),data=csatest))
 summary (lm(lrfs_y~factor(margintype),data=csatest))
+summary (lm(lrfs_y~factor(tiergrade),data=csatest))
+summary (lm(lrfs_y~factor(body_region),data=csatest))
 
 ## mfs
 summary (lm(mfs_y~age_y,data=csatest))
 summary (lm(mfs_y~factor(pathfrac_presentation),data=csatest))
 summary (lm(mfs_y~factor(margintype),data=csatest))
+summary (lm(mfs_y~factor(tiergrade),data=csatest))
+summary (lm(mfs_y~factor(body_region),data=csatest))
 
 ## os
 summary(lm(os_y~age_y,data=csatest))
 summary(lm(os_y~factor(pathfrac_presentation),data=csatest))
 summary(lm(os_y~factor(margintype),data=csatest))
+summary(lm(os_y~factor(tiergrade),data=csatest))
+summary(lm(os_y~factor(body_region),data=csatest))
 
 
 

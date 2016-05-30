@@ -97,7 +97,72 @@ Residual standard error: 5.56 on 309 degrees of freedom
   (1 observation deleted due to missingness)
 Multiple R-squared:  0.05048,	Adjusted R-squared:  0.04741
 F-statistic: 16.43 on 1 and 309 DF,  p-value: 6.397e-05
-***
+*** summary (lm(lrfs_y~factor(margintype),data=csatest))
+
+Call:
+lm(formula = lrfs_y ~ factor(margintype), data = csatest)
+
+Residuals:
+   Min     1Q Median     3Q    Max
+-8.007 -4.799 -0.538  3.442 15.999
+
+Coefficients:
+                                 Estimate Std. Error t value Pr(>|t|)
+(Intercept)                         9.176      2.534   3.621 0.000348 ***
+factor(margintype)gross_positive   -4.222      3.231  -1.307 0.192301
+factor(margintype)micro_positive   -1.084      2.653  -0.408 0.683236
+factor(margintype)negative         -1.123      2.563  -0.438 0.661456
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 5.667 on 284 degrees of freedom
+  (24 observations deleted due to missingness)
+Multiple R-squared:  0.008932,	Adjusted R-squared:  -0.001537
+F-statistic: 0.8532 on 3 and 284 DF,  p-value: 0.4659
+*** summary (lm(lrfs_y~factor(tiergrade),data=csatest))
+
+Call:
+lm(formula = lrfs_y ~ factor(tiergrade), data = csatest)
+
+Residuals:
+    Min      1Q  Median      3Q     Max
+-8.4580 -4.7588 -0.1536  3.0533 18.3725
+
+Coefficients:
+                      Estimate Std. Error t value Pr(>|t|)
+(Intercept)             5.6149     0.7706   7.286 2.69e-12 ***
+factor(tiergrade)high   2.8345     0.8757   3.237  0.00134 **
+factor(tiergrade)low    2.9910     1.0040   2.979  0.00312 **
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 5.61 on 308 degrees of freedom
+  (1 observation deleted due to missingness)
+Multiple R-squared:  0.0364,	Adjusted R-squared:  0.03014
+F-statistic: 5.817 on 2 and 308 DF,  p-value: 0.003314
+***  summary (lm(lrfs_y~factor(body_region),data=csatest))
+
+Call:
+lm(formula = lrfs_y ~ factor(body_region), data = csatest)
+
+Residuals:
+    Min      1Q  Median      3Q     Max
+-9.4090 -4.6360 -0.9651  3.2749 19.2538
+
+Coefficients:
+                             Estimate Std. Error t value Pr(>|t|)
+(Intercept)                   7.56816    0.59556  12.708   <2e-16 ***
+factor(body_region)flat_bone  2.44629    1.14979   2.128   0.0342 *
+factor(body_region)Hand_Foot  2.83805    1.57570   1.801   0.0727 .
+factor(body_region)Long_Bone  0.07197    0.73431   0.098   0.9220
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 5.65 on 307 degrees of freedom
+  (1 observation deleted due to missingness)
+Multiple R-squared:  0.02584,	Adjusted R-squared:  0.01632
+F-statistic: 2.714 on 3 and 307 DF,  p-value: 0.04499
+
 
 ** MFS
 *** summary (lm(mfs_y~age_y,data=csatest))
@@ -140,7 +205,73 @@ Residual standard error: 5.659 on 308 degrees of freedom
   (2 observations deleted due to missingness)
 Multiple R-squared:  0.04322,	Adjusted R-squared:  0.04011
 F-statistic: 13.91 on 1 and 308 DF,  p-value: 0.0002278
-***
+*** summary (lm(mfs_y~factor(margintype),data=csatest))
+
+Call:
+lm(formula = mfs_y ~ factor(margintype), data = csatest)
+
+Residuals:
+    Min      1Q  Median      3Q     Max
+-8.1387 -4.9129 -0.3568  3.3577 16.3994
+
+Coefficients:
+                                 Estimate Std. Error t value Pr(>|t|)
+(Intercept)                        8.5266     2.5725   3.315  0.00104 **
+factor(margintype)gross_positive  -1.6728     3.2792  -0.510  0.61036
+factor(margintype)micro_positive  -0.3879     2.6933  -0.144  0.88560
+factor(margintype)negative        -0.8739     2.6013  -0.336  0.73715
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 5.752 on 283 degrees of freedom
+  (25 observations deleted due to missingness)
+Multiple R-squared:  0.00206,	Adjusted R-squared:  -0.008519
+F-statistic: 0.1947 on 3 and 283 DF,  p-value: 0.9
+***  summary (lm(mfs_y~factor(tiergrade),data=csatest))
+
+Call:
+lm(formula = mfs_y ~ factor(tiergrade), data = csatest)
+
+Residuals:
+    Min      1Q  Median      3Q     Max
+-8.5319 -4.4313 -0.2118  3.1230 18.4456
+
+Coefficients:
+                      Estimate Std. Error t value Pr(>|t|)
+(Intercept)             4.5465     0.7693   5.910 9.08e-09 ***
+factor(tiergrade)high   3.8297     0.8747   4.378 1.64e-05 ***
+factor(tiergrade)low    4.1333     1.0022   4.124 4.80e-05 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 5.6 on 307 degrees of freedom
+  (2 observations deleted due to missingness)
+Multiple R-squared:  0.06596,	Adjusted R-squared:  0.05987
+F-statistic: 10.84 on 2 and 307 DF,  p-value: 2.827e-05
+***  summary (lm(mfs_y~factor(body_region),data=csatest))
+
+Call:
+lm(formula = mfs_y ~ factor(body_region), data = csatest)
+
+Residuals:
+    Min      1Q  Median      3Q     Max
+-9.8618 -4.7790 -0.7193  3.3893 19.6775
+
+Coefficients:
+                             Estimate Std. Error t value Pr(>|t|)
+(Intercept)                    7.1444     0.6094  11.724   <2e-16 ***
+factor(body_region)flat_bone   2.7174     1.1717   2.319    0.021 *
+factor(body_region)Hand_Foot   1.5827     1.6046   0.986    0.325
+factor(body_region)Long_Bone   0.5120     0.7499   0.683    0.495
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 5.749 on 306 degrees of freedom
+  (2 observations deleted due to missingness)
+Multiple R-squared:  0.01892,	Adjusted R-squared:  0.009297
+F-statistic: 1.967 on 3 and 306 DF,  p-value: 0.119
+
+
 ** OS
 *** summary(lm(os_y~age_y,data=csatest))
 
@@ -182,4 +313,71 @@ Residual standard error: 5.486 on 309 degrees of freedom
   (1 observation deleted due to missingness)
 Multiple R-squared:  0.03863,	Adjusted R-squared:  0.03552
 F-statistic: 12.42 on 1 and 309 DF,  p-value: 0.0004898
-***
+**
+*** summary(lm(os_y~factor(margintype),data=csatest))
+
+Call:
+lm(formula = os_y ~ factor(margintype), data = csatest)
+
+Residuals:
+    Min      1Q  Median      3Q     Max
+-8.2846 -4.7154  0.0278  3.1648 15.7209
+
+Coefficients:
+                                 Estimate Std. Error t value Pr(>|t|)
+(Intercept)                        9.1764     2.4883   3.688 0.000271 ***
+factor(margintype)gross_positive  -2.1696     3.1720  -0.684 0.494542
+factor(margintype)micro_positive  -0.7481     2.6052  -0.287 0.774203
+factor(margintype)negative        -0.8453     2.5160  -0.336 0.737143
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 5.564 on 284 degrees of freedom
+  (24 observations deleted due to missingness)
+Multiple R-squared:  0.002053,	Adjusted R-squared:  -0.008489
+F-statistic: 0.1948 on 3 and 284 DF,  p-value: 0.8999
+*** summary(lm(os_y~factor(tiergrade),data=csatest))
+
+Call:
+lm(formula = os_y ~ factor(tiergrade), data = csatest)
+
+Residuals:
+    Min      1Q  Median      3Q     Max
+-8.8408 -4.5453  0.0666  2.8680 17.9345
+
+Coefficients:
+                      Estimate Std. Error t value Pr(>|t|)
+(Intercept)             5.7878     0.7529   7.688 2.03e-13 ***
+factor(tiergrade)high   3.0996     0.8555   3.623  0.00034 ***
+factor(tiergrade)low    3.0963     0.9809   3.157  0.00175 **
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 5.481 on 308 degrees of freedom
+  (1 observation deleted due to missingness)
+Multiple R-squared:  0.04363,	Adjusted R-squared:  0.03742
+F-statistic: 7.026 on 2 and 308 DF,  p-value: 0.001038
+***  summary(lm(os_y~factor(body_region),data=csatest))
+
+Call:
+lm(formula = os_y ~ factor(body_region), data = csatest)
+
+Residuals:
+    Min      1Q  Median      3Q     Max
+-9.4090 -4.6963 -0.7929  3.3886 18.8414
+
+Coefficients:
+                             Estimate Std. Error t value Pr(>|t|)
+(Intercept)                   7.98055    0.58617  13.615   <2e-16 ***
+factor(body_region)flat_bone  2.03390    1.13167   1.797   0.0733 .
+factor(body_region)Hand_Foot  2.42566    1.55086   1.564   0.1188
+factor(body_region)Long_Bone  0.08087    0.72274   0.112   0.9110
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 5.561 on 307 degrees of freedom
+  (1 observation deleted due to missingness)
+Multiple R-squared:  0.01876,	Adjusted R-squared:  0.009172
+F-statistic: 1.957 on 3 and 307 DF,  p-value: 0.1205
+
+

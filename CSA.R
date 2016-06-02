@@ -235,6 +235,14 @@ if (csatest$lr[i]=="yes"){
 }else
     csatest$lrfs[i] <- csatest$date_status[i] - csatest$date_surgery[i]
 }
+
+#lr status column with 1,0 values
+for (i in 1:nrow (csatest)){
+if(csatest$lr[i]=="yes"|csatest$lr2[i]=="yes"|csatest$lr3[i]=="yes"){
+        csatest$lrstatus[i] = 1
+    } else
+        csatest$lrstatus[i] = 0}
+str(csatest$lrstatus)
 str(csatest)
 str(csatest$lrfs)
 head(csatest$lrfs)
@@ -256,6 +264,16 @@ for (i in 1:nrow (csatest)){
 }
 str(csatest$mfs)
 
+# metstatus column with NA for met_presentation, and 1,0 values
+
+for (i in 1:nrow (csatest)){
+if(csatest$met_presentation[i] == "yes") {
+    csatest$metstatus[i] = NA
+} else if  (csatest$met[i]=="yes"|csatest$met2[i]=="yes"|csatest$met3[i]=="yes"){
+        csatest$metstatus[i] = 1
+} else
+        csatest$metstatus[i] = 0}
+str(csatest$metstatus)
 # calculating OS
 csatest$os <- csatest$date_status - csatest$date_surgery
 str(csatest$os)
@@ -281,6 +299,7 @@ summary (lm(lrfs_y~factor(pathfrac_presentation),data=csatest))
 summary (lm(lrfs_y~factor(margintype),data=csatest))
 summary (lm(lrfs_y~factor(tiergrade),data=csatest))
 summary (lm(lrfs_y~factor(body_region),data=csatest))
+summary (lm(lrfs_y~factor(type_chondrosarcoma),data=csatest))
 
 ## mfs
 summary (lm(mfs_y~age_y,data=csatest))
@@ -288,6 +307,7 @@ summary (lm(mfs_y~factor(pathfrac_presentation),data=csatest))
 summary (lm(mfs_y~factor(margintype),data=csatest))
 summary (lm(mfs_y~factor(tiergrade),data=csatest))
 summary (lm(mfs_y~factor(body_region),data=csatest))
+summary (lm(mfs_y~factor(type_chondrosarcoma),data=csatest))
 
 ## os
 summary(lm(os_y~age_y,data=csatest))
@@ -295,6 +315,7 @@ summary(lm(os_y~factor(pathfrac_presentation),data=csatest))
 summary(lm(os_y~factor(margintype),data=csatest))
 summary(lm(os_y~factor(tiergrade),data=csatest))
 summary(lm(os_y~factor(body_region),data=csatest))
+summary(lm(os_y~factor(type_chondrosarcoma),data=csatest))
 
 
 

@@ -1,3 +1,6 @@
+write.csv(csatest,file="csvposix.csv",row.names=F)
+csatest<-read.csv("C:/Users/nayakp/research/Rspace/csvposix.csv",header = T, sep = ",",stringsAsFactors=F)
+
 install.packages("dplyr")
 install.packages("tidyr")
 install.packages("ggplot2")
@@ -14,6 +17,8 @@ install.packages("survival")
 library (survival)
 install.packages ("survcomp")
 library (survcomp)
+install.packages("GGally")
+library(GGally)
 csatest<-read.csv("C:/Users/nayakp/research/Rspace/CSAmain.csv",header = T, sep = ",",stringsAsFactors = F)#this read.csv works well
 # / slash is used for R code, \ this one for windows native address
 # which(csatest1$Age.at.Surgery.<=35)
@@ -279,6 +284,15 @@ csatest$os <- csatest$date_status - csatest$date_surgery
 str(csatest$os)
 write.csv(csatest,file="csvposix.csv",row.names=F)
 
+# OS values with 0 for ANED or AWED and 1 for DOD or Deceased
+
+for (i in 1:nrow (csatest)){
+if(csatest$status[i]=="ANED"|csatest$status[i]=="AWED"){
+        csatest$osstatus[i] = 0
+    } else
+        csatest$osstatus[i] = 1}
+str(csatest$osstatus)
+
 # converting them all from days to years
 csatest$os <- as.numeric(csatest$os)#lm model does not identify difftime objects hence as.numeric for difftime objects
 csatest$os_y <- (csatest$os)/365
@@ -317,5 +331,49 @@ summary(lm(os_y~factor(tiergrade),data=csatest))
 summary(lm(os_y~factor(body_region),data=csatest))
 summary(lm(os_y~factor(type_chondrosarcoma),data=csatest))
 
+# subsetting for relevant columns for analysis
+
+csa <- csatest[,40:68]
+names(csa)
+csa$sex <- csatest$sex
+csa$osstatus <- csatest$osstatus
+write.csv(csa,file="csa.csv",row.names=F)
 
 
+#cox ph model
+
+library(survival)
+#lrfs
+lrfscox <- coxph(Surv(lrfs_y,lrstatus)~ factor(type_chondrosarcoma)+ factor(body_region) +factor(tiergrade)+factor(margintype)+factor(pathfrac_presentation)+age_y,data = csa)
+summary(lrfscox)
+
+cox.zph(lrfscox)
+plot(cox.zph(lrfscox))
+plot(survfit(lrfscox))
+print(plot(survfit(lrfscox)))
+
+#mfs
+mfscox <- coxph(Surv(mfs_y,metstatus)~ factor(type_chondrosarcoma)+ factor(body_region) +factor(tiergrade)+factor(margintype)+factor(pathfrac_presentation)+age_y,data = csa)
+summary(mfscox)
+cox.zph(mfscox)
+plot(cox.zph(mfscox))
+plot(survfit(mfscox))
+print(plot(survfit(mfscox)))
+
+#os
+oscox <- coxph(Surv(os_y,osstatus)~ factor(type_chondrosarcoma)+ factor(body_region) +factor(tiergrade)+factor(margintype)+factor(pathfrac_presentation)+age_y,data = csa)
+summary(oscox)
+cox.zph(oscox)
+plot(cox.zph(oscox))
+plot(survfit(oscox))
+print(plot(survfit(oscox)))
+
+typeoscox <- coxph(Surv(os_y,osstatus)~ strata(factor(type_chondrosarcoma))+ factor(body_region) +factor(tiergrade)+factor(margintype)+factor(pathfrac_presentation)+age_y,data = csa)
+plot(survfit(typeoscox))
+print(plot(survfit(typeoscox)))
+cox.zph(typeoscox)
+
+# GGally and ggsurv for multi stratum curves
+sf.type <- survival::survfit(Surv(os_y,osstatus)~ factor(type_chondrosarcoma),data=csa)
+pl.type <- plot(sf.type)
+pl.type

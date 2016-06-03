@@ -22,6 +22,7 @@
 3. Rads #135,138 remote rads,149.206,223
 4. Met at presentation #238 dediff # 265,268 high,277,282 high,293 met
    presentation,met.#309 rads,multiple mets
+
 * names(csatest)
  [1] "dob"                        "age_surgery"
  [3] "sex"                        "diagnosis"
@@ -54,7 +55,9 @@
 [57] "met3"                       "lr3"
 [59] "age_sx"                     "lrfs"
 [61] "mfs"                        "os"
-[63] "age_y"
+[63] "age_y"                      "os_y"
+[65] "mfs_y"                      "lrfs_y"
+[67] "lrstatus"                   "metstatus"
 * Time in years Univariate LM
 ** LRFS
 *** summary (lm(lrfs_y~age_y,data=csatest))
@@ -379,5 +382,87 @@ Residual standard error: 5.561 on 307 degrees of freedom
   (1 observation deleted due to missingness)
 Multiple R-squared:  0.01876,	Adjusted R-squared:  0.009172
 F-statistic: 1.957 on 3 and 307 DF,  p-value: 0.1205
+* Cox Modelling
+ csacox <- coxph(Surv(lrfs_y,lrstatus)~ factor(type_chondrosarcoma)+ factor(body_region) +factor(tiergrade)+factor(margintype)+factor(pathfrac_presentation)+age_y,data = csa)
+Warning message:
+In fitter(X, Y, strats, offset, init, control, weights = weights,  :
+  Loglik converged before variable  3,5,6,10,11,12 ; beta may be infinite.
 
+> summary(csacox)
+Call:
+coxph(formula = Surv(lrfs_y, lrstatus) ~ factor(type_chondrosarcoma) +
+    factor(body_region) + factor(tiergrade) + factor(margintype) +
+    factor(pathfrac_presentation) + age_y, data = csa)
 
+  n= 287, number of events= 29
+   (25 observations deleted due to missingness)
+
+                                                      coef  exp(coef)
+factor(type_chondrosarcoma)primary_clearcell    -1.296e+00  2.738e-01
+factor(type_chondrosarcoma)primary_conventional -1.111e+00  3.293e-01
+factor(type_chondrosarcoma)primary_mesenchymal  -1.945e+01  3.570e-09
+factor(type_chondrosarcoma)secondary            -1.077e+00  3.404e-01
+factor(body_region)flat_bone                    -1.919e+01  4.639e-09
+factor(body_region)Hand_Foot                    -1.893e+01  5.999e-09
+factor(body_region)Long_Bone                    -3.112e-01  7.325e-01
+factor(tiergrade)high                            5.353e-01  1.708e+00
+factor(tiergrade)low                             3.098e-01  1.363e+00
+factor(margintype)gross_positive                 1.991e+01  4.420e+08
+factor(margintype)micro_positive                 1.899e+01  1.761e+08
+factor(margintype)negative                       1.856e+01  1.151e+08
+factor(pathfrac_presentation)yes                 2.266e+00  9.640e+00
+age_y                                            2.968e-02  1.030e+00
+                                                  se(coef)      z Pr(>|z|)
+factor(type_chondrosarcoma)primary_clearcell     1.469e+00 -0.882   0.3778
+factor(type_chondrosarcoma)primary_conventional  9.646e-01 -1.152   0.2494
+factor(type_chondrosarcoma)primary_mesenchymal   1.384e+04 -0.001   0.9989
+factor(type_chondrosarcoma)secondary             1.067e+00 -1.010   0.3127
+factor(body_region)flat_bone                     7.046e+03 -0.003   0.9978
+factor(body_region)Hand_Foot                     7.871e+03 -0.002   0.9981
+factor(body_region)Long_Bone                     4.313e-01 -0.722   0.4705
+factor(tiergrade)high                            7.649e-01  0.700   0.4840
+factor(tiergrade)low                             8.904e-01  0.348   0.7279
+factor(margintype)gross_positive                 1.866e+04  0.001   0.9991
+factor(margintype)micro_positive                 1.866e+04  0.001   0.9992
+factor(margintype)negative                       1.866e+04  0.001   0.9992
+factor(pathfrac_presentation)yes                 4.919e-01  4.607 4.09e-06 ***
+age_y                                            1.310e-02  2.266   0.0234 *
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+                                                exp(coef) exp(-coef) lower .95
+factor(type_chondrosarcoma)primary_clearcell    2.738e-01  3.653e+00   0.01538
+factor(type_chondrosarcoma)primary_conventional 3.293e-01  3.037e+00   0.04972
+factor(type_chondrosarcoma)primary_mesenchymal  3.570e-09  2.801e+08   0.00000
+factor(type_chondrosarcoma)secondary            3.404e-01  2.937e+00   0.04204
+factor(body_region)flat_bone                    4.639e-09  2.155e+08   0.00000
+factor(body_region)Hand_Foot                    5.999e-09  1.667e+08   0.00000
+factor(body_region)Long_Bone                    7.325e-01  1.365e+00   0.31458
+factor(tiergrade)high                           1.708e+00  5.855e-01   0.38140
+factor(tiergrade)low                            1.363e+00  7.336e-01   0.23805
+factor(margintype)gross_positive                4.420e+08  2.262e-09   0.00000
+factor(margintype)micro_positive                1.761e+08  5.680e-09   0.00000
+factor(margintype)negative                      1.151e+08  8.689e-09   0.00000
+factor(pathfrac_presentation)yes                9.640e+00  1.037e-01   3.67619
+age_y                                           1.030e+00  9.708e-01   1.00402
+                                                upper .95
+factor(type_chondrosarcoma)primary_clearcell        4.872
+factor(type_chondrosarcoma)primary_conventional     2.181
+factor(type_chondrosarcoma)primary_mesenchymal        Inf
+factor(type_chondrosarcoma)secondary                2.757
+factor(body_region)flat_bone                          Inf
+factor(body_region)Hand_Foot                          Inf
+factor(body_region)Long_Bone                        1.706
+factor(tiergrade)high                               7.649
+factor(tiergrade)low                                7.806
+factor(margintype)gross_positive                      Inf
+factor(margintype)micro_positive                      Inf
+factor(margintype)negative                            Inf
+factor(pathfrac_presentation)yes                   25.278
+age_y                                               1.057
+
+Concordance= 0.809  (se = 0.055 )
+Rsquare= 0.153   (max possible= 0.661 )
+Likelihood ratio test= 47.55  on 14 df,   p=1.561e-05
+Wald test            = 29.88  on 14 df,   p=0.007916
+Score (logrank) test = 69.04  on 14 df,   p=2.88e-09
